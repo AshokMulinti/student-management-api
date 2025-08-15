@@ -1,5 +1,6 @@
 package com.example.studentmanagement.controller;
 
+import com.example.studentmanagement.dto.StudentPatchRequest;
 import com.example.studentmanagement.entity.Student;
 import com.example.studentmanagement.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,17 @@ public class StudentController {
     public ResponseEntity<?> updateStudent(@PathVariable Long id, @Valid @RequestBody Student studentDetails) {
         try {
             Student updatedStudent = studentService.updateStudent(id, studentDetails);
+            return ResponseEntity.ok(updatedStudent);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // PATCH /api/students/{id} - Partial update existing student
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> patchStudent(@PathVariable Long id, @Valid @RequestBody StudentPatchRequest patchRequest) {
+        try {
+            Student updatedStudent = studentService.patchStudent(id, patchRequest);
             return ResponseEntity.ok(updatedStudent);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
