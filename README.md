@@ -1,0 +1,2 @@
+# student-management-api
+ExampleForCursorAIEditor
