@@ -1,5 +1,6 @@
 package com.example.studentmanagement.service;
 
+import com.example.studentmanagement.dto.StudentPatchRequest;
 import com.example.studentmanagement.entity.Student;
 import com.example.studentmanagement.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,5 +90,42 @@ public class StudentService {
     // Check if student exists
     public boolean studentExists(Long id) {
         return studentRepository.existsById(id);
+    }
+
+    // Partial update student (PATCH operation)
+    public Student patchStudent(Long id, StudentPatchRequest patchRequest) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+
+        // Check if email is being changed and if it already exists
+        if (patchRequest.getEmail() != null && !student.getEmail().equals(patchRequest.getEmail()) && 
+            studentRepository.existsByEmail(patchRequest.getEmail())) {
+            throw new RuntimeException("Student with email " + patchRequest.getEmail() + " already exists");
+        }
+
+        // Update only non-null fields
+        if (patchRequest.getFirstName() != null) {
+            student.setFirstName(patchRequest.getFirstName());
+        }
+        if (patchRequest.getLastName() != null) {
+            student.setLastName(patchRequest.getLastName());
+        }
+        if (patchRequest.getEmail() != null) {
+            student.setEmail(patchRequest.getEmail());
+        }
+        if (patchRequest.getPhoneNumber() != null) {
+            student.setPhoneNumber(patchRequest.getPhoneNumber());
+        }
+        if (patchRequest.getDateOfBirth() != null) {
+            student.setDateOfBirth(patchRequest.getDateOfBirth());
+        }
+        if (patchRequest.getGrade() != null) {
+            student.setGrade(patchRequest.getGrade());
+        }
+        if (patchRequest.getGpa() != null) {
+            student.setGpa(patchRequest.getGpa());
+        }
+
+        return studentRepository.save(student);
     }
 }

@@ -66,7 +66,8 @@ The API will be available at `http://localhost:8080`
 | GET | `/api/students/{id}` | Get student by ID |
 | GET | `/api/students/email/{email}` | Get student by email |
 | POST | `/api/students` | Create new student |
-| PUT | `/api/students/{id}` | Update existing student |
+| PUT | `/api/students/{id}` | Update existing student (full update) |
+| PATCH | `/api/students/{id}` | Partial update existing student |
 | DELETE | `/api/students/{id}` | Delete student |
 
 ### Search & Filter
@@ -104,7 +105,7 @@ curl http://localhost:8080/api/students
 curl http://localhost:8080/api/students/1
 ```
 
-### Update Student
+### Update Student (Full Update)
 ```bash
 curl -X PUT http://localhost:8080/api/students/1 \
   -H "Content-Type: application/json" \
@@ -112,6 +113,24 @@ curl -X PUT http://localhost:8080/api/students/1 \
     "firstName": "John",
     "lastName": "Smith",
     "email": "john.smith@example.com",
+    "grade": "A+",
+    "gpa": 3.9
+  }'
+```
+
+### Partial Update Student (PATCH)
+```bash
+# Update only the grade
+curl -X PATCH http://localhost:8080/api/students/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "grade": "A+"
+  }'
+
+# Update multiple fields
+curl -X PATCH http://localhost:8080/api/students/1 \
+  -H "Content-Type: application/json" \
+  -d '{
     "grade": "A+",
     "gpa": 3.9
   }'
